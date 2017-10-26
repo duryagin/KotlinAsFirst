@@ -51,7 +51,8 @@ fun main(args: Array<String>) {
  * Пользователь задает время в часах, минутах и секундах, например, 8:20:35.
  * Рассчитать время в секундах, прошедшее с начала суток (30035 в данном случае).
  */
-fun seconds(hours: Int, minutes: Int, seconds: Int): Int = hours*3600 + minutes*60 + seconds
+fun seconds(hours: Int, minutes: Int, seconds: Int): Int =
+        hours*3600 + minutes*60 + seconds
 
 /**
  * Тривиальная
@@ -61,7 +62,7 @@ fun seconds(hours: Int, minutes: Int, seconds: Int): Int = hours*3600 + minutes*
  * 1 сажень = 3 аршина = 48 вершков, 1 вершок = 4.445 см.
  */
 fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double =
-                                               sagenes*48*4.445*0.01 + arshins*16*4.445*0.01 + vershoks*4.445*0.01
+        (sagenes*48 + arshins*16 + vershoks)*0.04445
 
 /**
  * Тривиальная
@@ -69,7 +70,8 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double =
  * Пользователь задает угол в градусах, минутах и секундах (например, 36 градусов 14 минут 35 секунд).
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
-fun angleInRadian(grad: Int, min: Int, sec: Int): Double = grad*PI/180 + min*PI/(180*60) + sec*PI/(180*3600)
+fun angleInRadian(grad: Int, min: Int, sec: Int): Double =
+        (grad + min/60.0 + sec/3600.0)*PI/180.0
 
 /**
  * Тривиальная
@@ -77,7 +79,8 @@ fun angleInRadian(grad: Int, min: Int, sec: Int): Double = grad*PI/180 + min*PI/
  * Найти длину отрезка, соединяющего точки на плоскости с координатами (x1, y1) и (x2, y2).
  * Например, расстояние между (3, 0) и (0, 4) равно 5
  */
-fun trackLength(x1: Double, y1: Double, x2: Double, y2: Double): Double = sqrt(sqr(x2-x1)+sqr(y2-y1))
+fun trackLength(x1: Double, y1: Double, x2: Double, y2: Double): Double =
+        sqrt(sqr(x2-x1)+sqr(y2-y1))
 
 /**
  * Простая
@@ -105,10 +108,7 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
 fun accountInThreeYears(initial: Int, percent: Int): Double =
-         initial +
-         initial*percent*0.01 +
-        (initial + initial*percent*0.01)*percent*0.01 +
-        (initial + initial*percent*0.01 + (initial + initial*percent*0.01)*percent*0.01)*percent*0.01
+         initial * (1 + percent*0.03 + sqr(percent*0.01)*3 + pow(percent*0.01,3.0))
 
 /**
  * Простая
@@ -116,4 +116,5 @@ fun accountInThreeYears(initial: Int, percent: Int): Double =
  * Пользователь задает целое трехзначное число (например, 478).
  *Необходимо вывести число, полученное из заданного перестановкой цифр в обратном порядке (например, 874).
  */
-fun numberRevert(number: Int): Int = number%10*100 + (number%100-number%10) + (number - number%100)/100
+fun numberRevert(number: Int): Int =
+        number%10*100 + (number%100-number%10) + (number - number%100)/100
