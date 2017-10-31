@@ -96,11 +96,11 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int {
     val bishopThreatens = abs(kingX - bishopX) == abs(kingY - bishopY)
-    if ((kingX == rookX) || (kingY == rookY)) return when {
+    return if ((kingX == rookX) || (kingY == rookY)) when {
         bishopThreatens -> 3
-        else     -> 1
+        else            -> 1
     }
-    else return if (bishopThreatens && ((kingX != rookX))) 2 else  0
+    else if (bishopThreatens && ((kingX != rookX))) 2 else  0
 }
 
 /**
