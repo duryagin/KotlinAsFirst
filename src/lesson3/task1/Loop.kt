@@ -66,7 +66,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
 fun digitNumber(n: Int): Int {
     var count = 1
     var number = n
-    while (number > 9) {
+    while ((abs(number) > 9)) {
         count++
         number /= 10
     }
@@ -79,7 +79,10 @@ fun digitNumber(n: Int): Int {
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = if (n<3) 1 else fib(n-1)+fib(n-2)
+fun fib(n: Int): Int =
+        ((pow((1 + sqrt(5.0)) / 2 , n.toDouble()) -
+                pow((1 - sqrt(5.0)) / 2 , n.toDouble()))
+                / sqrt(5.0)).toInt()
 
 /**
  * Простая
@@ -162,11 +165,11 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  */
 fun sin(x: Double, eps: Double): Double {
     var X = x
-    if (x > 2 * PI) X -= (X / (2 * PI)).toInt() * 2 * PI
+    if (abs(x) > 2 * PI) X -= (X / (2 * PI)).toInt() * 2 * PI
     var sin = 0.0
     var i = 1
     var sequenceMember = X
-    while (eps <= sequenceMember){
+    while (eps <= abs(sequenceMember)){
         when {
             (i % 2 == 1) -> sin += sequenceMember
             else         -> sin -= sequenceMember
@@ -185,11 +188,11 @@ fun sin(x: Double, eps: Double): Double {
  */
 fun cos(x: Double, eps: Double): Double {
     var X = x
-    if (x > 2 * PI) X -= (X / (2 * PI)).toInt() * 2 * PI
+    if (abs(x) > 2 * PI) X -= (X / (2 * PI)).toInt() * 2 * PI
     var cos = 0.0
     var i = 0
     var sequenceMember = 1.0
-    while (eps <= sequenceMember){
+    while (eps <= abs(sequenceMember)){
         when {
             (i % 2 == 1) -> cos -= sequenceMember
             else         -> cos += sequenceMember
