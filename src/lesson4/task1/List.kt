@@ -237,6 +237,7 @@ fun factorizeToString(n: Int): String {
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
 fun convert(n: Int, base: Int): List<Int> {
+    if (n == 0) return listOf(0)
     val list = mutableListOf<Int>()
     var N = n
     while (N > 0) {
@@ -255,6 +256,7 @@ fun convert(n: Int, base: Int): List<Int> {
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
 fun convertToString(n: Int, base: Int): String {
+    if (n == 0) return "0"
     var string = ""
     var N = n
     while (N > 0) {
@@ -315,7 +317,22 @@ fun decimalFromString(str: String, base: Int): Int {
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+fun roman(n: Int): String {
+    var str = ""
+    var N = n
+    val roman = listOf(" ","I","IV","V","IX","X","XL","L","XC","C","CD","D","CM","M")
+    val arab = listOf(0,1,4,5,9,10,40,50,90,100,400,500,900,1000)
+    val k = arab.size - 1
+    while (N > 0) {
+        for (i in k..0) {
+            while (N >= arab[i]) {
+                str += roman[i]
+                N -= arab[i]
+            }
+        }
+    }
+    return str
+}
 
 /**
  * Очень сложная
@@ -325,3 +342,9 @@ fun roman(n: Int): String = TODO()
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 fun russian(n: Int): String = TODO()
+
+
+fun main(args: Array<String>) {
+    val r = roman(0)
+    println(r)
+}
