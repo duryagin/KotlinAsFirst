@@ -2,6 +2,11 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson1.task1.sqr
+import lesson3.task1.isPrime
+import lesson3.task1.maxDivisor
+import java.lang.Math.pow
+import java.lang.Math.sqrt
 
 /**
  * Пример
@@ -106,14 +111,20 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * по формуле abs = sqrt(a1^2 + a2^2 + ... + aN^2).
  * Модуль пустого вектора считать равным 0.0.
  */
-fun abs(v: List<Double>): Double = TODO()
+fun abs(v: List<Double>): Double {
+    var abs = 0.0
+    for (element in v) {
+       abs += sqr(element) }
+    return sqrt(abs)
+}
 
 /**
  * Простая
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double = TODO()
+fun mean(list: List<Double>): Double =
+        if (list.isEmpty()) 0.0 else list.sum() / list.size
 
 /**
  * Средняя
@@ -123,7 +134,14 @@ fun mean(list: List<Double>): Double = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun center(list: MutableList<Double>): MutableList<Double> = TODO()
+fun center(list: MutableList<Double>): MutableList<Double> {
+    if (list.isEmpty()) return list
+    val mean = list.sum() / list.size
+    for (i in 0 until list.size) {
+        list[i] -= mean
+    }
+    return list
+}
 
 /**
  * Средняя
@@ -132,7 +150,13 @@ fun center(list: MutableList<Double>): MutableList<Double> = TODO()
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.0.
  */
-fun times(a: List<Double>, b: List<Double>): Double = TODO()
+fun times(a: List<Double>, b: List<Double>): Double {
+    var C = 0.0
+    for (i in 0 until a.size) {
+        C += a[i] * b[i]
+    }
+    return C
+}
 
 /**
  * Средняя
@@ -142,7 +166,13 @@ fun times(a: List<Double>, b: List<Double>): Double = TODO()
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0.0 при любом x.
  */
-fun polynom(p: List<Double>, x: Double): Double = TODO()
+fun polynom(p: List<Double>, x: Double): Double {
+    var polynom = 0.0
+    for ((i, element) in p.withIndex()) {
+        polynom += element * pow(x, i.toDouble())
+    }
+    return polynom
+}
 
 /**
  * Средняя
@@ -154,7 +184,13 @@ fun polynom(p: List<Double>, x: Double): Double = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun accumulate(list: MutableList<Double>): MutableList<Double> = TODO()
+fun accumulate(list: MutableList<Double>): MutableList<Double> {
+    if (list.isEmpty()) return list
+    for (i in 1 until list.size) {
+        list[i] += list[i-1]
+    }
+    return list
+}
 
 /**
  * Средняя
@@ -163,7 +199,17 @@ fun accumulate(list: MutableList<Double>): MutableList<Double> = TODO()
  * Результат разложения вернуть в виде списка множителей, например 75 -> (3, 5, 5).
  * Множители в списке должны располагаться по возрастанию.
  */
-fun factorize(n: Int): List<Int> = TODO()
+fun factorize(n: Int): List<Int> {
+    if (isPrime(n)) return listOf(n)
+    var N = n
+    val list = mutableListOf<Int>()
+    while (!isPrime(N)) {
+        list.add(N / maxDivisor(N))
+        N = maxDivisor(N)
+    }
+    list.add(N)
+    return list
+}
 
 /**
  * Сложная
@@ -171,7 +217,17 @@ fun factorize(n: Int): List<Int> = TODO()
  * Разложить заданное натуральное число n > 1 на простые множители.
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  */
-fun factorizeToString(n: Int): String = TODO()
+fun factorizeToString(n: Int): String {
+    if (isPrime(n)) return "$n"
+    var N = n
+    val list = mutableListOf<Int>()
+    while (!isPrime(N)) {
+        list.add(N / maxDivisor(N))
+        N = maxDivisor(N)
+    }
+    list.add(N)
+    return list.joinToString("*")
+}
 
 /**
  * Средняя
@@ -180,7 +236,15 @@ fun factorizeToString(n: Int): String = TODO()
  * Результат перевода вернуть в виде списка цифр в base-ичной системе от старшей к младшей,
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
-fun convert(n: Int, base: Int): List<Int> = TODO()
+fun convert(n: Int, base: Int): List<Int> {
+    val list = mutableListOf<Int>()
+    var N = n
+    while (N > 0) {
+        list.add(0, N % base)
+        N /= base
+    }
+    return list
+}
 
 /**
  * Сложная
@@ -190,7 +254,19 @@ fun convert(n: Int, base: Int): List<Int> = TODO()
  * строчными буквами: 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
-fun convertToString(n: Int, base: Int): String = TODO()
+fun convertToString(n: Int, base: Int): String {
+    var string = ""
+    var N = n
+    while (N > 0) {
+        string += if (N % base < 10) "${N % base}" else (N % base + 87).toChar()
+        N /= base
+    }
+    var newString = ""
+    for (i in 0 until string.length) {
+        newString += string[string.length - 1 - i]
+    }
+    return newString
+}
 
 /**
  * Средняя
@@ -199,7 +275,15 @@ fun convertToString(n: Int, base: Int): String = TODO()
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
-fun decimal(digits: List<Int>, base: Int): Int = TODO()
+fun decimal(digits: List<Int>, base: Int): Int {
+    var n = 0
+    var i = digits.size - 1
+    for (element in digits) {
+        n += pow(base.toDouble(), i.toDouble()).toInt() * element
+        i--
+    }
+    return n
+}
 
 /**
  * Сложная
@@ -210,7 +294,18 @@ fun decimal(digits: List<Int>, base: Int): Int = TODO()
  * 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: str = "13c", base = 14 -> 250
  */
-fun decimalFromString(str: String, base: Int): Int = TODO()
+fun decimalFromString(str: String, base: Int): Int {
+    var n = 0
+    var i = str.length - 1
+    for (element in str) {
+        if (element.toInt() < 87)
+            n += pow(base.toDouble(), i.toDouble()).toInt() * (element.toInt() - 48)
+        else
+            n += pow(base.toDouble(), i.toDouble()).toInt() * (element.toInt() - 87)
+        i--
+    }
+    return n
+}
 
 /**
  * Сложная
