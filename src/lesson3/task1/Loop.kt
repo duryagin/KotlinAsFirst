@@ -66,7 +66,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
 fun digitNumber(n: Int): Int {
     var count = 1
     var number = n
-    while ((abs(number) > 9)) {
+    while (abs(number) > 9) {
         count++
         number /= 10
     }
@@ -91,12 +91,12 @@ fun fib(n: Int): Int =
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var M = m
-    var N = n
-    while (M != N) {
-        if (M>N) M -= N else N -= M
+    var varM = m
+    var varN = n
+    while (varM != varN) {
+        if (varM > varN) varM -= varN else varN -= varM
     }
-    return m*n / M
+    return m*n / varM
 }
 
 /**
@@ -105,11 +105,10 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var i = 2
-    while (n % i != 0) {
-        i++
+    for (i in 2..sqrt(n.toDouble()).toInt()) {
+        if (n % i == 0) return i
     }
-    return i
+    return n
 }
 
 /**
@@ -118,7 +117,8 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    var i = n-1
+    if (isPrime(n)) return 1
+    var i = n / 2
     while (n % i !=0) {
         i--
     }
@@ -132,14 +132,8 @@ fun maxDivisor(n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    var M = m
-    var N = n
-    while (M != N) {
-       if (M > N) M -= N else N -= M
-    }
-    return M == 1
-}
+fun isCoPrime(m: Int, n: Int): Boolean =
+        m * n / lcm(m,n) == 1
 
 /**
  * Простая
@@ -150,7 +144,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
     for (i in m..n) {
-       if (sqrt(i.toDouble()) == sqrt(i.toDouble()).toInt().toDouble())
+       if (sqrt(i.toDouble()) == floor(sqrt(i.toDouble())))
            return true
     }
     return false
@@ -164,18 +158,18 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun sin(x: Double, eps: Double): Double {
-    var X = x
-    if (abs(x) > 2 * PI) X -= (X / (2 * PI)).toInt() * 2 * PI
+    var varX = x
+    if (abs(x) > 2 * PI) varX -= floor(varX / (2 * PI)) * 2 * PI
     var sin = 0.0
     var i = 1
-    var sequenceMember = X
+    var sequenceMember = varX
     while (eps <= abs(sequenceMember)){
         when {
             (i % 2 == 1) -> sin += sequenceMember
             else         -> sin -= sequenceMember
         }
         i++
-        sequenceMember = pow(X,(i*2.0-1)) / factorial((i*2-1))
+        sequenceMember = pow(varX,(i*2.0-1)) / factorial((i*2-1))
     }
     return sin
 }
@@ -187,8 +181,8 @@ fun sin(x: Double, eps: Double): Double {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun cos(x: Double, eps: Double): Double {
-    var X = x
-    if (abs(x) > 2 * PI) X -= (X / (2 * PI)).toInt() * 2 * PI
+    var varX = x
+    if (abs(x) > 2 * PI) varX -= floor(varX / (2 * PI)) * 2 * PI
     var cos = 0.0
     var i = 0
     var sequenceMember = 1.0
@@ -198,7 +192,7 @@ fun cos(x: Double, eps: Double): Double {
             else         -> cos += sequenceMember
         }
         i++
-        sequenceMember = pow(X,(i*2.0)) / factorial((i*2))
+        sequenceMember = pow(varX,(i*2.0)) / factorial((i*2))
     }
     return cos
 }
@@ -211,14 +205,14 @@ fun cos(x: Double, eps: Double): Double {
  */
 fun revert(n: Int): Int {
     var newN = 0
-    var N = n
+    var varN = n
     var i = 0.0
     do {
         newN *= 10
-        newN += N % 10
+        newN += varN % 10
         i++
-        N /= 10
-    } while (N > 0)
+        varN /= 10
+    } while (varN > 0)
     return newN
 }
 
@@ -229,18 +223,8 @@ fun revert(n: Int): Int {
  * первая цифра равна последней, вторая -- предпоследней и так далее.
  * 15751 -- палиндром, 3653 -- нет.
  */
-fun isPalindrome(n: Int): Boolean {
-    var newN = 0
-    var N = n
-    var i = 0.0
-    do {
-        newN *= 10
-        newN += N % 10
-        i++
-        N /= 10
-    } while (N > 0)
-    return newN == n
-}
+fun isPalindrome(n: Int): Boolean =
+        revert(n) == n
 
 /**
  * Средняя
@@ -250,12 +234,12 @@ fun isPalindrome(n: Int): Boolean {
  */
 fun hasDifferentDigits(n: Int): Boolean {
     if (n < 10) return false
-    var N = n
-    while (N > 99) {
-        if (N % 100 / 10 != N % 10) return true
-        N /= 100
+    var varN = n
+    while (varN > 9) {
+        if (varN % 100 / 10 != varN % 10) return true
+        varN /= 10
     }
-    return if (N < 10) return false else N / 10 != N % 10
+    return false
 }
 
 /**
