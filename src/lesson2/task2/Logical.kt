@@ -4,6 +4,7 @@ package lesson2.task2
 
 import lesson1.task1.sqr
 import java.lang.Math.abs
+import java.lang.Math.sqrt
 
 /**
  * Пример
@@ -42,7 +43,7 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
  */
 fun circleInside(x1: Double, y1: Double, r1: Double,
                  x2: Double, y2: Double, r2: Double): Boolean =
-        Math.sqrt(sqr(x2 - x1) + sqr(y2 - y1)) <= r2 - r1
+        sqrt(sqr(x2 - x1) + sqr(y2 - y1)) <= r2 - r1
 
 /**
  * Средняя
