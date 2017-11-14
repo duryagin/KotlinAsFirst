@@ -7,6 +7,7 @@ import lesson3.task1.isPrime
 import lesson3.task1.maxDivisor
 import java.lang.Math.pow
 import java.lang.Math.sqrt
+import kotlin.text.StringBuilder
 
 /**
  * Пример
@@ -136,9 +137,9 @@ fun mean(list: List<Double>): Double =
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
     if (list.isEmpty()) return list
-    val mean = list.sum() / list.size
+    val firstList = list.toList()
     for (i in 0 until list.size) {
-        list[i] -= mean
+        list[i] -= mean(firstList)
     }
     return list
 }
@@ -151,11 +152,11 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.0.
  */
 fun times(a: List<Double>, b: List<Double>): Double {
-    var C = 0.0
+    var scalarProduct = 0.0
     for (i in 0 until a.size) {
-        C += a[i] * b[i]
+        scalarProduct += a[i] * b[i]
     }
-    return C
+    return scalarProduct
 }
 
 /**
@@ -185,7 +186,6 @@ fun polynom(p: List<Double>, x: Double): Double {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Double>): MutableList<Double> {
-    if (list.isEmpty()) return list
     for (i in 1 until list.size) {
         list[i] += list[i-1]
     }
@@ -200,14 +200,13 @@ fun accumulate(list: MutableList<Double>): MutableList<Double> {
  * Множители в списке должны располагаться по возрастанию.
  */
 fun factorize(n: Int): List<Int> {
-    if (isPrime(n)) return listOf(n)
-    var N = n
+    var varNumber = n
     val list = mutableListOf<Int>()
-    while (!isPrime(N)) {
-        list.add(N / maxDivisor(N))
-        N = maxDivisor(N)
+    while (!isPrime(varNumber)) {
+        list.add(varNumber / maxDivisor(varNumber))
+        varNumber = maxDivisor(varNumber)
     }
-    list.add(N)
+    list.add(varNumber)
     return list
 }
 
@@ -217,17 +216,7 @@ fun factorize(n: Int): List<Int> {
  * Разложить заданное натуральное число n > 1 на простые множители.
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  */
-fun factorizeToString(n: Int): String {
-    if (isPrime(n)) return "$n"
-    var N = n
-    val list = mutableListOf<Int>()
-    while (!isPrime(N)) {
-        list.add(N / maxDivisor(N))
-        N = maxDivisor(N)
-    }
-    list.add(N)
-    return list.joinToString("*")
-}
+fun factorizeToString(n: Int): String = factorize(n).joinToString("*")
 
 /**
  * Средняя
@@ -239,10 +228,10 @@ fun factorizeToString(n: Int): String {
 fun convert(n: Int, base: Int): List<Int> {
     if (n == 0) return listOf(0)
     val list = mutableListOf<Int>()
-    var N = n
-    while (N > 0) {
-        list.add(0, N % base)
-        N /= base
+    var varNumber = n
+    while (varNumber > 0) {
+        list.add(0, varNumber % base)
+        varNumber /= base
     }
     return list
 }
@@ -256,18 +245,16 @@ fun convert(n: Int, base: Int): List<Int> {
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
 fun convertToString(n: Int, base: Int): String {
-    if (n == 0) return "0"
-    var string = ""
-    var N = n
-    while (N > 0) {
-        string += if (N % base < 10) "${N % base}" else (N % base + 87).toChar()
-        N /= base
+    val list = convert(n, base)
+    val characterNumberA = 'a'.toInt() - 10
+    val str = StringBuilder()
+    for (i in 0 until list.size) {
+        if (list[i] < 10) {
+            str.append("${list[i]}")
+        }
+        else str.append((list[i] + characterNumberA).toChar())
     }
-    var newString = ""
-    for (i in 0 until string.length) {
-        newString += string[string.length - 1 - i]
-    }
-    return newString
+    return str.toString()
 }
 
 /**
@@ -278,13 +265,13 @@ fun convertToString(n: Int, base: Int): String {
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
 fun decimal(digits: List<Int>, base: Int): Int {
-    var n = 0
+    var number = 0
     var i = digits.size - 1
     for (element in digits) {
-        n += pow(base.toDouble(), i.toDouble()).toInt() * element
+        number += pow(base.toDouble(), i.toDouble()).toInt() * element
         i--
     }
-    return n
+    return number
 }
 
 /**
@@ -297,16 +284,19 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * Например: str = "13c", base = 14 -> 250
  */
 fun decimalFromString(str: String, base: Int): Int {
-    var n = 0
+    var number = 0
     var i = str.length - 1
+    val characterNumberA = 'a'.toInt() - 10
+    val characterNumber0 = '0'.toInt()
     for (element in str) {
-        if (element.toInt() < 87)
-            n += pow(base.toDouble(), i.toDouble()).toInt() * (element.toInt() - 48)
+        val baseInPowI = pow(base.toDouble(), i.toDouble()).toInt()
+        if (element.toInt() < characterNumberA)
+            number += baseInPowI * (element.toInt() - characterNumber0)
         else
-            n += pow(base.toDouble(), i.toDouble()).toInt() * (element.toInt() - 87)
+            number += baseInPowI * (element.toInt() - characterNumberA)
         i--
     }
-    return n
+    return number
 }
 
 /**
@@ -318,20 +308,17 @@ fun decimalFromString(str: String, base: Int): Int {
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 fun roman(n: Int): String {
-    var str = ""
-    var N = n
-    val roman = listOf(" ","I","IV","V","IX","X","XL","L","XC","C","CD","D","CM","M")
-    val arab = listOf(0,1,4,5,9,10,40,50,90,100,400,500,900,1000)
-    val k = arab.size - 1
-    while (N > 0) {
-        for (i in k..0) {
-            while (N >= arab[i]) {
-                str += roman[i]
-                N -= arab[i]
-            }
+    val str = StringBuilder()
+    var varNumber = n
+    val roman = listOf("M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I")
+    val arab = listOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
+    for (i in 0 until arab.size) {
+        while (varNumber >= arab[i]) {
+            str.append(roman[i])
+            varNumber -= arab[i]
         }
     }
-    return str
+    return str.toString()
 }
 
 /**
@@ -341,10 +328,40 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
-
-
-fun main(args: Array<String>) {
-    val r = roman(0)
-    println(r)
+fun russian(n: Int): String {
+    val str = StringBuilder()
+    val toNine = listOf("", "один", "два",
+            "три", "четыре", "пять",
+            "шесть", "семь", "восемь", "девять")
+    val toNineteen = listOf("десять ", "одиннадцать ", "двенадцать ",
+                    "тринадцать ", "четырнадцать ", "пятнадцать ",
+                    "шестнадцать ", "семнадцать ", "восемнадцать ", "девятнадцать ")
+    val toNinety = listOf("", "", "двадцать ",
+            "тридцать ", "сорок ", "пятьдесят ",
+            "шестьдесят ", "семьдесят ", "восемьдесят ", "девяносто ")
+    val toNineHundred = listOf("", "сто ", "двести ",
+            "триста ", "четыреста ", "пятьсот ",
+            "шестьсот ", "семьсот ", "восемьот ", "девятьсот ")
+    val numberOfThousands = listOf("", "одна ", "две ",
+            "три ", "четыре ", "пять ",
+            "шесть ", "семь ", "восемь ", "девять ")
+    str.append (toNineHundred[n / 100000])
+        if (n % 100000 / 1000 in 10..19) {
+            str.append (toNineteen[n % 10000 / 1000])
+            str.append ("тысяч ")
+        } else {
+            str.append (toNinety[n % 100000 / 10000] + numberOfThousands[n % 10000 / 1000])
+            when {
+                n % 10000 / 1000 != 0         -> when {
+                    n % 10000 / 1000 == 1 -> str.append ("тысяча ")
+                    n % 10000 / 1000 < 5  -> str.append ("тысячи ")
+                    else                  -> str.append ("тысяч ")
+                }
+                (n / 1000 > 0)                -> str.append ("тысяч ")
+            }
+        }
+    str.append (toNineHundred[n % 1000 / 100])
+    if (n % 100 in 10..19) str.append (toNineteen[n % 10])
+    else str.append (toNinety[n % 100 / 10] + toNine[n % 10])
+    return (str.toString()).trim()
 }
