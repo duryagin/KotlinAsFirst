@@ -136,10 +136,10 @@ fun mean(list: List<Double>): Double =
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
-    if (list.isEmpty()) return list
     val firstList = list.toList()
+    val mean = mean(firstList)
     for (i in 0 until list.size) {
-        list[i] -= mean(firstList)
+        list[i] -= mean
     }
     return list
 }
@@ -246,13 +246,13 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     val list = convert(n, base)
-    val characterNumberA = 'a'.toInt() - 10
+    val char = 'a' - 10
     val str = StringBuilder()
     for (i in 0 until list.size) {
         if (list[i] < 10) {
             str.append("${list[i]}")
         }
-        else str.append((list[i] + characterNumberA).toChar())
+        else str.append(char + list[i])
     }
     return str.toString()
 }
@@ -290,10 +290,12 @@ fun decimalFromString(str: String, base: Int): Int {
     val characterNumber0 = '0'.toInt()
     for (element in str) {
         val baseInPowI = pow(base.toDouble(), i.toDouble()).toInt()
-        if (element.toInt() < characterNumberA)
-            number += baseInPowI * (element.toInt() - characterNumber0)
+        val digitOne = element.toInt() - characterNumber0
+        val digitTwo = element.toInt() - characterNumberA
+        number += if (element.toInt() < characterNumberA)
+            baseInPowI * digitOne
         else
-            number += baseInPowI * (element.toInt() - characterNumberA)
+            baseInPowI * digitTwo
         i--
     }
     return number
@@ -345,23 +347,27 @@ fun russian(n: Int): String {
     val numberOfThousands = listOf("", "одна ", "две ",
             "три ", "четыре ", "пять ",
             "шесть ", "семь ", "восемь ", "девять ")
+    val digitOne = n % 10000 / 1000
+    val digitTwo = n % 100000
+    val digitThree = n % 100
+    val digitFour = n % 10
     str.append (toNineHundred[n / 100000])
-        if (n % 100000 / 1000 in 10..19) {
-            str.append (toNineteen[n % 10000 / 1000])
+        if (digitTwo / 1000 in 10..19) {
+            str.append (toNineteen[digitOne])
             str.append ("тысяч ")
         } else {
-            str.append (toNinety[n % 100000 / 10000] + numberOfThousands[n % 10000 / 1000])
+            str.append (toNinety[digitTwo / 10000] + numberOfThousands[digitOne])
             when {
-                n % 10000 / 1000 != 0         -> when {
-                    n % 10000 / 1000 == 1 -> str.append ("тысяча ")
-                    n % 10000 / 1000 < 5  -> str.append ("тысячи ")
-                    else                  -> str.append ("тысяч ")
+                digitOne != 0 -> when {
+                    digitOne == 1 -> str.append ("тысяча ")
+                    digitOne < 5 -> str.append ("тысячи ")
+                    else -> str.append ("тысяч ")
                 }
-                (n / 1000 > 0)                -> str.append ("тысяч ")
+                (n / 1000 > 0) -> str.append ("тысяч ")
             }
         }
     str.append (toNineHundred[n % 1000 / 100])
-    if (n % 100 in 10..19) str.append (toNineteen[n % 10])
-    else str.append (toNinety[n % 100 / 10] + toNine[n % 10])
+    if (digitThree in 10..19) str.append (toNineteen[digitFour])
+    else str.append (toNinety[digitThree / 10] + toNine[digitFour])
     return (str.toString()).trim()
 }
