@@ -80,7 +80,7 @@ fun dateStrToDigit(str: String): String {
             }
         }
         if (month == 0) return ""
-        return String.format("%02d.%02d.%04d", parts[0].toInt(), month, parts[2].toInt())
+        return String.format("%02d.%02d.%d", parts[0].toInt(), month, parts[2].toInt())
     }
     catch (e: NumberFormatException) {
         return ""
@@ -127,7 +127,24 @@ fun dateDigitToStr(digital: String): String {
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    val number = StringBuilder()
+    val digits = listOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+    val prefix = StringBuilder("")
+    val phoneOne = StringBuilder(phone)
+    if ("+" in phone) {
+        val i = phoneOne.indexOf('+', 0)
+        prefix.append("+")
+        phoneOne.delete(i, i+1)
+    }
+    val parts = phoneOne.split(" ", "-", "(", ")")
+    for (part in parts) {
+        for (element in part) {
+            if (element in digits) number.append(element) else return ""
+        }
+    }
+    return prefix.append(number).toString()
+}
 
 /**
  * Средняя
@@ -139,7 +156,20 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    var max = -2
+    val parts = jumps.split(" ")
+    return try {
+        for (i in 0 until parts.size) {
+            if (parts[i] != "%" && parts[i] != "-") {
+                if (parts[i].toInt() > max) max = parts[i].toInt()
+            }
+        }
+        if (max != -2) max else -1
+    } catch(e: NumberFormatException) {
+        -1
+    }
+}
 
 /**
  * Сложная
@@ -151,7 +181,20 @@ fun bestLongJump(jumps: String): Int = TODO()
  * Прочитать строку и вернуть максимальную взятую высоту (230 в примере).
  * При нарушении формата входной строки вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    var max = -2
+    val parts = jumps.split(" ")
+    return try {
+        for (i in 1 until parts.size) {
+            if ('+' in parts[i]) {
+                if (parts[i - 1].toInt() > max) max = parts[i - 1].toInt()
+            }
+        }
+        if (max != -2) max else -1
+    } catch(e: NumberFormatException) {
+        -1
+    }
+}
 
 /**
  * Сложная
@@ -162,7 +205,21 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val parts = expression.split(" ")
+    var result = parts[0].toInt()
+    try {
+        for (i in 2 until parts.size step 2) {
+            if (parts[i - 1] == "+") result += parts[i].toInt() else
+                if (parts[i - 1] == "-") result -= parts[i].toInt()
+                else throw IllegalArgumentException("IllegalArgumentException")
+        }
+        return result
+    }
+    catch (e: IllegalArgumentException) {
+        throw IllegalArgumentException("IllegalArgumentException")
+    }
+}
 
 /**
  * Сложная
