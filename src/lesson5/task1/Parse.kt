@@ -158,10 +158,10 @@ fun flattenPhoneNumber(phone: String): String {
  */
 fun bestLongJump(jumps: String): Int {
     var max = -2
-    val parts = jumps.split(" ")
+    val parts = jumps.split(" ", "-", "%")
     return try {
         for (i in 0 until parts.size) {
-            if (parts[i] != "%" && parts[i] != "-") {
+            if (parts[i] != "") {
                 if (parts[i].toInt() > max) max = parts[i].toInt()
             }
         }
@@ -207,8 +207,8 @@ fun bestHighJump(jumps: String): Int {
  */
 fun plusMinus(expression: String): Int {
     val parts = expression.split(" ")
-    var result = parts[0].toInt()
     try {
+        var result = parts[0].toInt()
         for (i in 2 until parts.size step 2) {
             if (parts[i - 1] == "+") result += parts[i].toInt() else
                 if (parts[i - 1] == "-") result -= parts[i].toInt()
@@ -230,7 +230,20 @@ fun plusMinus(expression: String): Int {
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val parts = str.split(" ")
+    val j = -1
+    for (i in 0 until parts.size - 1) {
+        if (parts[i].toLowerCase() == parts[i+1].toLowerCase()) {
+            var index = i
+            for (k in 0 until i) {
+                index += parts[k].length
+            }
+            return index
+        }
+    }
+    return j
+}
 
 /**
  * Сложная
@@ -243,7 +256,25 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть положительными
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    var mostExpensive = ""
+    val parts = description.split(" ", "; ")
+    try {
+        if (parts.size == 2 && parts[1].toDouble() > 0.0) return parts[0]
+        for (i in 1 until parts.size - 2 step 2) {
+            if (i > 0.0) {
+                if (parts[i].toDouble() > parts[i + 2].toDouble())
+                    mostExpensive = parts[i - 1]
+                else mostExpensive = parts[i + 1]
+            }
+        }
+        if (parts[parts.size - 1].toDouble() > 0.0) return mostExpensive else
+            return ""
+    }
+    catch (e: NumberFormatException) {
+        return ""
+    }
+}
 
 /**
  * Сложная
@@ -256,7 +287,24 @@ fun mostExpensive(description: String): String = TODO()
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
+fun fromRoman(roman: String): Int {
+    val varRoman = StringBuilder(roman)
+    var number = 0
+    val romanDigits = listOf('I', 'V', 'X', 'L', 'C', 'D', 'M')
+    val romanList = listOf("M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I")
+    val arabList = listOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
+    for (element in roman) {
+        if (element !in romanDigits) return -1
+    }
+    for (i in 0 until romanList.size) {
+        while (romanList[i] in varRoman) {
+            number += arabList[i]
+            if (varRoman.length == 1) break
+            varRoman.delete(0, romanList[i].length)
+        }
+    }
+    return number
+}
 
 /**
  * Очень сложная
