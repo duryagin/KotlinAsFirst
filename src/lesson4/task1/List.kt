@@ -136,8 +136,7 @@ fun mean(list: List<Double>): Double =
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
-    val firstList = list.toList()
-    val mean = mean(firstList)
+    val mean = mean(list)
     for (i in 0 until list.size) {
         list[i] -= mean
     }
@@ -347,27 +346,27 @@ fun russian(n: Int): String {
     val numberOfThousands = listOf("", "одна ", "две ",
             "три ", "четыре ", "пять ",
             "шесть ", "семь ", "восемь ", "девять ")
-    val digitOne = n % 10000 / 1000
-    val digitTwo = n % 100000
-    val digitThree = n % 100
-    val digitFour = n % 10
+    val digit = n % 10000 / 1000
+    val remainderOne = n % 100000
+    val remainderTwo = n % 100
+    val remainderThree = n % 10
     str.append (toNineHundred[n / 100000])
-        if (digitTwo / 1000 in 10..19) {
-            str.append (toNineteen[digitOne])
-            str.append ("тысяч ")
-        } else {
-            str.append (toNinety[digitTwo / 10000] + numberOfThousands[digitOne])
-            when {
-                digitOne != 0 -> when {
-                    digitOne == 1 -> str.append ("тысяча ")
-                    digitOne < 5 -> str.append ("тысячи ")
-                    else -> str.append ("тысяч ")
-                }
-                (n / 1000 > 0) -> str.append ("тысяч ")
+    if (remainderOne / 1000 in 10..19) {
+        str.append (toNineteen[digit])
+        str.append ("тысяч ")
+    } else {
+        str.append (toNinety[remainderOne / 10000] + numberOfThousands[digit])
+        when {
+            digit != 0 -> when {
+                digit == 1 -> str.append ("тысяча ")
+                digit < 5 -> str.append ("тысячи ")
+                else -> str.append ("тысяч ")
             }
+            (n / 1000 > 0) -> str.append ("тысяч ")
         }
+    }
     str.append (toNineHundred[n % 1000 / 100])
-    if (digitThree in 10..19) str.append (toNineteen[digitFour])
-    else str.append (toNinety[digitThree / 10] + toNine[digitFour])
+    if (remainderTwo in 10..19) str.append (toNineteen[remainderThree])
+    else str.append (toNinety[remainderTwo / 10] + toNine[remainderThree])
     return (str.toString()).trim()
 }
