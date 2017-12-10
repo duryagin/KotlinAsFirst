@@ -202,6 +202,7 @@ fun bestHighJump(jumps: String): Int {
 fun plusMinus(expression: String): Int {
     if (expression == "") throw IllegalArgumentException("IllegalArgumentException")
     val parts = expression.split(" ")
+    if (parts.size % 2 == 0) throw IllegalArgumentException("IllegalArgumentException")
     var result = 0
     try {
         result += parts[0].toInt()
@@ -213,11 +214,11 @@ fun plusMinus(expression: String): Int {
         when {
             parts[i - 1] == "+" -> result += parts[i].toInt()
             parts[i - 1] == "-" -> result -= parts[i].toInt()
-            else -> throw IllegalArgumentException("IllegalArgumentException")
         }
     }
     return result
 }
+
 
 /**
  * Сложная
@@ -233,7 +234,7 @@ fun firstDuplicateIndex(str: String): Int {
     val j = -1
     for (i in 0 until parts.size - 1) {
         if (parts[i].toLowerCase() == parts[i+1].toLowerCase()) {
-            return str.substring(0, str.indexOf("${parts[i]} ${parts[i + 1]}")).length
+            return str.indexOf("${parts[i]} ${parts[i + 1]}")
         }
     }
     return j
@@ -254,9 +255,9 @@ fun mostExpensive(description: String): String {
     var mostExpensive = ""
     val parts = description.split(" ", "; ")
     try {
-        if (parts.size == 2 && parts[1].toDouble() > 0.0) return parts[0]
+        if (parts.size == 2 && parts[1].toDouble() >= 0.0) return parts[0]
         for (i in 1 until parts.size - 2 step 2) {
-            if (i > 0.0) {
+            if (i >= 0.0) {
                 if (parts[i].toDouble() > parts[i + 2].toDouble())
                     mostExpensive = parts[i - 1]
                 else mostExpensive = parts[i + 1]
@@ -290,7 +291,7 @@ fun fromRoman(roman: String): Int {
         if (element !in romanDigits) return -1
     }
     for (i in 0 until romanList.size) {
-        while (romanList[i] in varRoman) {
+        while (varRoman.indexOf(romanList[i]) == 0) {
             number += arabList[i]
             if (varRoman.length == 1) break
             varRoman.delete(0, romanList[i].length)
