@@ -352,7 +352,8 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     if (listOfStartUpElements.size == listOfElementsToEnd.size) {
         if (!listOfStartUpElements.isEmpty()) {
             for (i in 0 until listOfStartUpElements.size) {
-                if (listOfStartUpElements[i] > listOfElementsToEnd[i]) throw IllegalArgumentException()
+                if (listOfStartUpElements[i] > listOfElementsToEnd[i])
+                    throw IllegalArgumentException()
             }
         }
     } else throw IllegalArgumentException()
@@ -382,7 +383,8 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                             var endIndex = 0
                             while (startIndex != endIndex) {
                                 i++
-                                if (commands[i] == ']') endIndex++ else if (commands[i] == '[') startIndex++
+                                if (commands[i] == ']') endIndex++ else
+                                    if (commands[i] == '[') startIndex++
                             }
                         }
                     }
@@ -392,7 +394,8 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                             var endIndex = 1
                             while (startIndex != endIndex) {
                                 i--
-                                if (commands[i] == '[') startIndex++ else if (commands[i] == ']') endIndex++
+                                if (commands[i] == '[') startIndex++ else
+                                    if (commands[i] == ']') endIndex++
                             }
                         }
                     }
