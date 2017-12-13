@@ -352,8 +352,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     if (listOfStartUpElements.size == listOfElementsToEnd.size) {
         if (!listOfStartUpElements.isEmpty()) {
             for (i in 0 until listOfStartUpElements.size) {
-                if (listOfStartUpElements[i] > listOfElementsToEnd[i])
-                    throw IllegalArgumentException()
+                if (listOfStartUpElements[i] > listOfElementsToEnd[i]) throw IllegalArgumentException()
             }
         }
     } else throw IllegalArgumentException()
@@ -361,53 +360,49 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var number = cells / 2
     var count = 0
     var i = 0
-    try {
-        do {
-            if (limit == count) break else {
-                when {
-                    commands[i] == '>' -> {
-                        number++
-                    }
-                    commands[i] == '<' -> {
-                        number--
-                    }
-                    commands[i] == '+' -> {
-                        listOfCells[number]++
-                    }
-                    commands[i] == '-' -> {
-                        listOfCells[number]--
-                    }
-                    commands[i] == '[' -> {
-                        if (listOfCells[number] == 0) {
-                            var startIndex = 1
-                            var endIndex = 0
-                            while (startIndex != endIndex) {
-                                i++
-                                if (commands[i] == ']') endIndex++ else
-                                    if (commands[i] == '[') startIndex++
-                            }
+    do {
+        if (limit == count) break else {
+            when {
+                commands[i] == '>' -> {
+                    if (number + 1 >= cells) throw IllegalStateException()
+                    number++
+                }
+                commands[i] == '<' -> {
+                    if (number - 1 < 0) throw IllegalStateException()
+                    number--
+                }
+                commands[i] == '+' -> {
+                    listOfCells[number]++
+                }
+                commands[i] == '-' -> {
+                    listOfCells[number]--
+                }
+                commands[i] == '[' -> {
+                    if (listOfCells[number] == 0) {
+                        var startIndex = 1
+                        var endIndex = 0
+                        while (startIndex != endIndex) {
+                            i++
+                            if (commands[i] == ']') endIndex++ else if (commands[i] == '[') startIndex++
                         }
-                    }
-                    commands[i] == ']' -> {
-                        if (listOfCells[number] != 0) {
-                            var startIndex = 0
-                            var endIndex = 1
-                            while (startIndex != endIndex) {
-                                i--
-                                if (commands[i] == '[') startIndex++ else
-                                    if (commands[i] == ']') endIndex++
-                            }
-                        }
-                    }
-                    commands[i] == ' ' -> {
                     }
                 }
-                count++
-                i++
+                commands[i] == ']' -> {
+                    if (listOfCells[number] != 0) {
+                        var startIndex = 0
+                        var endIndex = 1
+                        while (startIndex != endIndex) {
+                            i--
+                            if (commands[i] == '[') startIndex++ else if (commands[i] == ']') endIndex++
+                        }
+                    }
+                }
+                commands[i] == ' ' -> {
+                }
             }
-        } while (commands.length != i)
-        return listOfCells
-    } catch (e: IllegalStateException) {
-        throw IllegalStateException()
-    }
+            count++
+            i++
+        }
+    } while (commands.length != i)
+    return listOfCells
 }
