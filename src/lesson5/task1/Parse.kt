@@ -117,6 +117,7 @@ fun dateDigitToStr(digital: String): String {
  * При неверном формате вернуть пустую строку
  */
 fun flattenPhoneNumber(phone: String): String {
+    if (phone == "+") return ""
     val number = StringBuilder()
     val prefix = StringBuilder("")
     val phoneOne = StringBuilder(phone)
@@ -352,11 +353,13 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     if (listOfStartUpElements.size == listOfElementsToEnd.size) {
         if (!listOfStartUpElements.isEmpty()) {
             for (i in 0 until listOfStartUpElements.size) {
-                if (listOfStartUpElements[i] > listOfElementsToEnd[i]) throw IllegalArgumentException()
+                if (listOfStartUpElements[i] > listOfElementsToEnd[i])
+                    throw IllegalArgumentException()
             }
         }
     } else throw IllegalArgumentException()
     val listOfCells = MutableList(cells, {0})
+    if (commands == "") return listOfCells
     var number = cells / 2
     var count = 0
     var i = 0
@@ -383,7 +386,8 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                         var endIndex = 0
                         while (startIndex != endIndex) {
                             i++
-                            if (commands[i] == ']') endIndex++ else if (commands[i] == '[') startIndex++
+                            if (commands[i] == ']') endIndex++ else
+                                if (commands[i] == '[') startIndex++
                         }
                     }
                 }
@@ -393,7 +397,8 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                         var endIndex = 1
                         while (startIndex != endIndex) {
                             i--
-                            if (commands[i] == '[') startIndex++ else if (commands[i] == ']') endIndex++
+                            if (commands[i] == '[') startIndex++ else
+                                if (commands[i] == ']') endIndex++
                         }
                     }
                 }
