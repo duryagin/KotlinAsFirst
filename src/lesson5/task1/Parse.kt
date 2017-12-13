@@ -175,14 +175,13 @@ fun bestLongJump(jumps: String): Int {
 fun bestHighJump(jumps: String): Int {
     var max = -1
     val parts = jumps.split(" ")
+    if (parts.size % 2 == 1) return -1
     return try {
-        for (i in 1 until parts.size) {
-            for (j in '0'..'9') {
-                if (i % 10 == 1 && j in parts[i]) return -1
+        for (i in 1 until parts.size step 2) {
+            for (element in parts[i]) {
+                if (element != '%' && element != '+' && element != '-') return -1
             }
-            if ('+' in parts[i]) {
-                if (parts[i - 1].toInt() > max) max = parts[i - 1].toInt()
-            }
+            if ('+' in parts[i] && parts[i - 1].toInt() > max) max = parts[i - 1].toInt()
         }
         max
     } catch(e: NumberFormatException) {
@@ -252,15 +251,16 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть положительными
  */
 fun mostExpensive(description: String): String {
-    var mostExpensive = ""
-    val parts = description.split(" ", "; ")
+    if (description.isEmpty()) return ""
+    val parts = description.split("; ")
     try {
-        if (parts.size == 2 && parts[1].toDouble() >= 0.0) return parts[0]
-        for (i in 1 until parts.size - 2 step 2) {
-            if (i >= 0.0) {
-                if (parts[i].toDouble() > parts[i + 2].toDouble())
-                    mostExpensive = parts[i - 1]
-                else mostExpensive = parts[i + 1]
+        var maxPrice = parts[0].substring(parts[0].indexOf(" ") + 1, parts[0].length).toDouble()
+        var mostExpensive = parts[0].substring(0, parts[0].indexOf(" "))
+        for (i in 1 until parts.size) {
+            val ProductAndPrice = parts[i].split(" ")
+            if (ProductAndPrice[1].toDouble() > maxPrice) {
+                maxPrice = ProductAndPrice[1].toDouble()
+                mostExpensive = ProductAndPrice[0]
             }
         }
         return mostExpensive
@@ -282,6 +282,7 @@ fun mostExpensive(description: String): String {
  * Вернуть -1, если roman не является корректным римским числом
  */
 fun fromRoman(roman: String): Int {
+    if (roman.isEmpty()) return -1
     val varRoman = StringBuilder(roman)
     var number = 0
     val romanDigits = listOf('I', 'V', 'X', 'L', 'C', 'D', 'M')
