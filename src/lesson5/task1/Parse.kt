@@ -179,9 +179,11 @@ fun bestHighJump(jumps: String): Int {
     return try {
         for (i in 1 until parts.size step 2) {
             for (element in parts[i]) {
-                if (element != '%' && element != '+' && element != '-') return -1
+                if (element != '%' && element != '+' && element != '-')
+                    return -1
             }
-            if ('+' in parts[i] && parts[i - 1].toInt() > max) max = parts[i - 1].toInt()
+            if ('+' in parts[i] && parts[i - 1].toInt() > max)
+                max = parts[i - 1].toInt()
         }
         max
     } catch(e: NumberFormatException) {
@@ -254,7 +256,8 @@ fun mostExpensive(description: String): String {
     if (description.isEmpty()) return ""
     val parts = description.split("; ")
     try {
-        var maxPrice = parts[0].substring(parts[0].indexOf(" ") + 1, parts[0].length).toDouble()
+        var maxPrice = parts[0].substring(parts[0].indexOf(" ") + 1,
+                parts[0].length).toDouble()
         var mostExpensive = parts[0].substring(0, parts[0].indexOf(" "))
         for (i in 1 until parts.size) {
             val ProductAndPrice = parts[i].split(" ")
@@ -337,4 +340,71 @@ fun fromRoman(roman: String): Int {
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    val commandList = listOf('>', '<', '+', '-', '[', ']', ' ')
+    val listOfStartUpElements = mutableListOf<Int>()
+    val listOfElementsToEnd = mutableListOf<Int>()
+    for (i in 0 until  commands.length) {
+        if (commands[i] !in commandList) throw IllegalArgumentException()
+        if (commands[i] == '[') listOfStartUpElements.add(i)
+        if (commands[i] == ']') listOfElementsToEnd.add(i)
+    }
+    if (listOfStartUpElements.size == listOfElementsToEnd.size) {
+        if (!listOfStartUpElements.isEmpty()) {
+            for (i in 0 until listOfStartUpElements.size) {
+                if (listOfStartUpElements[i] > listOfElementsToEnd[i]) throw IllegalArgumentException()
+            }
+        }
+    } else throw IllegalArgumentException()
+    val listOfCells = MutableList(cells, {0})
+    var number = cells / 2
+    var count = 0
+    var i = 0
+    try {
+        do {
+            if (limit == count) break else {
+                when {
+                    commands[i] == '>' -> {
+                        number++
+                    }
+                    commands[i] == '<' -> {
+                        number--
+                    }
+                    commands[i] == '+' -> {
+                        listOfCells[number]++
+                    }
+                    commands[i] == '-' -> {
+                        listOfCells[number]--
+                    }
+                    commands[i] == '[' -> {
+                        if (listOfCells[number] == 0) {
+                            var startIndex = 1
+                            var endIndex = 0
+                            while (startIndex != endIndex) {
+                                i++
+                                if (commands[i] == ']') endIndex++ else if (commands[i] == '[') startIndex++
+                            }
+                        }
+                    }
+                    commands[i] == ']' -> {
+                        if (listOfCells[number] != 0) {
+                            var startIndex = 0
+                            var endIndex = 1
+                            while (startIndex != endIndex) {
+                                i--
+                                if (commands[i] == '[') startIndex++ else if (commands[i] == ']') endIndex++
+                            }
+                        }
+                    }
+                    commands[i] == ' ' -> {
+                    }
+                }
+                count++
+                i++
+            }
+        } while (commands.length != i)
+        return listOfCells
+    } catch (e: IllegalStateException) {
+        throw IllegalStateException()
+    }
+}
