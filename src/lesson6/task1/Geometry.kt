@@ -2,8 +2,7 @@
 package lesson6.task1
 
 import lesson1.task1.sqr
-import java.lang.Math.abs
-import java.lang.Math.sqrt
+import java.lang.Math.*
 
 /**
  * Точка на плоскости
@@ -175,15 +174,23 @@ fun lineBySegment(s: Segment): Line = TODO()
  *
  * Построить прямую по двум точкам
  */
-fun lineByPoints(a: Point, b: Point): Line = TODO()
+fun lineByPoints(a: Point, b: Point): Line =
+        Line(Point((a.x + b.x) / 2, (a.y + b.y) / 2),
+                atan((b.y - a.y) / (b.x - a.x)))
 
 /**
  * Сложная
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line = TODO()
-
+fun bisectorByPoints(a: Point, b: Point): Line {
+    val midpoint = Point((a.x + b.x) / 2, (a.y + b.y) / 2)
+    val slope = (b.y - a.y) / (b.x - a.x)
+    val negativeReciprocal = - 1 / slope
+    var angle = atan(negativeReciprocal)
+    if (angle < 0) angle += PI
+    return Line(midpoint, angle)
+}
 /**
  * Средняя
  *
