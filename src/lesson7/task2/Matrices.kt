@@ -60,10 +60,10 @@ operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
  *  9  8  7  6
  */
 fun generateSpiral(height: Int, width: Int): Matrix<Int> {
-    val matrix = createMatrix(height, width, 0)
-    var i = 0
-    var k = 0
-    var l = 0
+    val matrix = createMatrix(height, width, 1)
+    var i = 1
+    var k = 1
+    var l = 1
     var number = 1
     do {
         for (j in i until width - i) {
@@ -71,24 +71,24 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
             matrix[i, j] = number
             number++
         }
-        i++
         for (j in i until height - k) {
             if (number == height * width) break
             matrix[j, width - i] = number
             number++
         }
-        k++
+        i++
         for (j in width - k..l) {
             if (number == height * width) break
             matrix[height - k, j] = number
             number++
         }
-        l++
+        k++
         for (j in height - k until k) {
             if (number == height * width) break
             matrix[j, l - 1] = number
             number++
         }
+        l++
     } while (number != height * width)
     return matrix
 }
@@ -108,10 +108,10 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
  *  1  1  1  1  1  1
  */
 fun generateRectangles(height: Int, width: Int): Matrix<Int> {
-    val matrix = createMatrix(height, width, 0)
-    var i = 0
-    var k = 0
-    var l = 0
+    val matrix = createMatrix(height, width, 1)
+    var i = 1
+    var k = 1
+    var l = 1
     var count = 1
     var number = 1
     do {
@@ -120,24 +120,24 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int> {
             matrix[i, j] = count
             number++
         }
-        i++
         for (j in i until height - k) {
             if (number == height * width) break
             matrix[j, width - i] = count
             number++
         }
-        k++
+        i++
         for (j in width - k..l) {
             if (number == height * width) break
             matrix[height - k, j] = count
             number++
         }
-        l++
-        for (j in height - k until k) {
+        k++
+        for (j in height - l until k) {
             if (number == height * width) break
             matrix[j, l - 1] = count
             number++
         }
+        l++
         count++
     } while (number != height * width)
     return matrix
