@@ -172,8 +172,19 @@ fun generateSnake(height: Int, width: Int): Matrix<Int> = TODO()
  * 4 5 6      8 5 2
  * 7 8 9      9 6 3
  */
-fun <E> rotate(matrix: Matrix<E>): Matrix<E> = TODO()
-
+fun <E> rotate(matrix: Matrix<E>): Matrix<E> {
+    val newMatrix = matrix
+    if (matrix.height != matrix.width) throw IllegalArgumentException() else {
+        var n = 0
+        for ((m, i) in (matrix.width - 1..0).withIndex()) {
+            for (j in matrix.height - 1..0) {
+                newMatrix[i, j] = matrix[m, n]
+                n++
+            }
+        }
+    }
+    return newMatrix
+}
 /**
  * Сложная
  *
