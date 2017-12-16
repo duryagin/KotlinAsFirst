@@ -64,29 +64,32 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
     var i = 0
     var k = 1
     var l = 2
-    var number = 1
+    var number = 0
     do {
         for (j in i..width - k) {
-            if (number == height * width) break
+            number++
             matrix[i, j] = +number
-            number++
+            if (number == height * width) break
         }
+        if (number == height * width) break
         for (j in k until height - i) {
-            if (number == height * width) break
+            number++
             matrix[j, width - k] = +number
-            number++
-        }
-        for (j in width - l..i) {
             if (number == height * width) break
-            matrix[height - k, j] = +number
-            number++
         }
+        if (number == height * width) break
+        for (j in width - l..i) {
+            number++
+            matrix[height - k, j] = +number
+            if (number == height * width) break
+        }
+        if (number == height * width) break
         i++
         k++
         for (j in height - k..i) {
-            if (number == height * width) break
-            matrix[j, i - 1] = +number
             number++
+            matrix[j, i - 1] = +number
+            if (number == height * width) break
         }
         l++
     } while (number != height * width)
@@ -113,7 +116,7 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int> {
     var k = 1
     var l = 2
     var count = 1
-    var number = 1
+    var number = 0
     do {
         for (j in i..width - k) {
             if (number == height * width) break
