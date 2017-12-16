@@ -68,24 +68,24 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
     do {
         for (j in i until width - i) {
             if (number == height * width) break
-            matrix[i, j] = number
+            matrix[i, j] += number
             number++
         }
         for (j in i until height - k) {
             if (number == height * width) break
-            matrix[j, width - i] = number
+            matrix[j, width - i] += number
             number++
         }
         i++
         for (j in width - k..l) {
             if (number == height * width) break
-            matrix[height - k, j] = number
+            matrix[height - k, j] += number
             number++
         }
         k++
         for (j in height - k until k) {
             if (number == height * width) break
-            matrix[j, l - 1] = number
+            matrix[j, l - 1] += number
             number++
         }
         l++
@@ -117,24 +117,24 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int> {
     do {
         for (j in i until width - i) {
             if (number == height * width) break
-            matrix[i, j] = count
+            matrix[i, j] = +count
             number++
         }
         for (j in i until height - k) {
             if (number == height * width) break
-            matrix[j, width - i] = count
+            matrix[j, width - i] = +count
             number++
         }
         i++
         for (j in width - k..l) {
             if (number == height * width) break
-            matrix[height - k, j] = count
+            matrix[height - k, j] = +count
             number++
         }
         k++
         for (j in height - l until k) {
             if (number == height * width) break
-            matrix[j, l - 1] = count
+            matrix[j, l - 1] = +count
             number++
         }
         l++
