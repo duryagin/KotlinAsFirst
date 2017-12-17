@@ -48,28 +48,39 @@ fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> =
  * Реализация интерфейса "матрица"
  */
 class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : Matrix<E> {
-    private  val list = MutableList(height * width, {e})
+    val listOfLists = MutableList(height) {MutableList(width) {e}}
 
     override fun get(row: Int, column: Int): E =
-            list[(row + 1) * width - (width - column - 1) - 1]
+            if (row in 0 until height && column in 0 until width &&
+                    listOfLists[row][column].toString().isNotEmpty())
+                listOfLists[row][column]
+            else throw IllegalArgumentException()
 
     override fun get(cell: Cell): E  = get(cell.row, cell.column)
 
-    override fun set(row: Int, column: Int, value: E) {
-        list[(row + 1) * width - (width - column - 1) - 1] = value
-    }
+    override fun set(row: Int, column: Int, value: E)  =
+            if (row in 0 until height && column in 0 until width)
+                listOfLists[row][column] = value
+            else throw IllegalArgumentException()
 
     override fun set(cell: Cell, value: E) = set(cell.row, cell.column, value)
 
-    override fun equals(other: Any?) =
-            other is MatrixImpl<*> &&
-                    height == other.height &&
-                    width == other.width
+    override fun equals(other: Any?) : Boolean {
+        if (!(other is MatrixImpl<*> &&
+                height == other.height &&
+                width == other.width))
+            return false
+        for (row in 0 until height) {
+            for (column in 0 until width)
+                if (listOfLists[row][column] != other[row, column]) return false
+        }
+        return true
+    }
 
     override fun hashCode(): Int {
         var result = height
         result = 31 * result + width
-        result = 31 * result + list.hashCode()
+        result = 31 * result + listOfLists.hashCode()
         return result
     }
 
@@ -78,11 +89,13 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : M
         stringBuilder.append("[")
         for (row in 0 until  height) {
             stringBuilder.append("[")
-            for (column in 0 until  width) {
+            for (column in 0 until  width - 1) {
                 stringBuilder.append(this[row, column], ", ")
             }
-            stringBuilder.append("]")
+            stringBuilder.append(this[row, width - 1])
+            stringBuilder.append("], ")
         }
+        stringBuilder.delete(stringBuilder.length - 2, stringBuilder.length)
         stringBuilder.append("]")
         return stringBuilder.toString()
     }

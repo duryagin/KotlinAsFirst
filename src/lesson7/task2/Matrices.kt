@@ -59,7 +59,42 @@ operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
  * 10 11 12  5
  *  9  8  7  6
  */
-fun generateSpiral(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateSpiral(height: Int, width: Int): Matrix<Int> {
+    val matrix = createMatrix(height, width, 0)
+    var i = 0
+    var k = 1
+    var l = 2
+    var number = 0
+    do {
+        for (j in i..width - k) {
+            number++
+            matrix[i, j] = +number
+            if (number == height * width) break
+        }
+        if (number == height * width) break
+        for (j in k until height - i) {
+            number++
+            matrix[j, width - k] = +number
+            if (number == height * width) break
+        }
+        if (number == height * width) break
+        for (j in width - l..i) {
+            number++
+            matrix[height - k, j] = +number
+            if (number == height * width) break
+        }
+        if (number == height * width) break
+        i++
+        k++
+        for (j in height - k..i) {
+            number++
+            matrix[j, i - 1] = +number
+            if (number == height * width) break
+        }
+        l++
+    } while (number != height * width)
+    return matrix
+}
 
 /**
  * Сложная
@@ -75,7 +110,41 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> = TODO()
  *  1  2  2  2  2  1
  *  1  1  1  1  1  1
  */
-fun generateRectangles(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateRectangles(height: Int, width: Int): Matrix<Int> {
+    val matrix = createMatrix(height, width, 0)
+    var i = 0
+    var k = 1
+    var l = 2
+    var count = 1
+    var number = 0
+    do {
+        for (j in i..width - k) {
+            if (number == height * width) break
+            matrix[i, j] = count
+            number++
+        }
+        for (j in k until height - i) {
+            if (number == height * width) break
+            matrix[j, width - k] = count
+            number++
+        }
+        for (j in width - l..i) {
+            if (number == height * width) break
+            matrix[height - k, j] = count
+            number++
+        }
+        i++
+        k++
+        for (j in height - k..i) {
+            if (number == height * width) break
+            matrix[j, i - 1] = count
+            number++
+        }
+        count++
+        l++
+    } while (number != height * width)
+    return matrix
+}
 
 /**
  * Сложная
@@ -104,17 +173,20 @@ fun generateSnake(height: Int, width: Int): Matrix<Int> = TODO()
  * 7 8 9      9 6 3
  */
 fun <E> rotate(matrix: Matrix<E>): Matrix<E> {
-    var n = 0
-    var m = 0
-    for (i in 0 until matrix.height) {
-        for (j in matrix.width - 1..0) {
-            matrix[i, j] = matrix[m, n]
+    val newMatrix = matrix
+    if (matrix.height != matrix.width) throw IllegalArgumentException() else {
+        var m = 0
+        var n = 0
+        for (i in matrix.width - 1..0) {
+            for (j in matrix.height - 1..0) {
+                newMatrix[i, j] = matrix[m, n]
+                n++
+            }
+            n = 0
             m++
         }
-        m = 0
-        n++
     }
-    return matrix
+    return newMatrix
 }
 
 /**
